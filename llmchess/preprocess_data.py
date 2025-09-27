@@ -1,15 +1,41 @@
 import argparse
+import re
 import json
+import random
 import chess.pgn
 
 
-def main():
+def split_pgn_by_move_number(pgn_string: str) -> list[str]:
+    game_moves = (
+        pgn_string.rsplit("\n", 1)[-1]
+        .replace("0-1", "")
+        .replace("1-0", "")
+        .replace("1/2-1/2", "")
+    )
+
+    processed_string = " " + game_moves.strip()
+
+    parts = re.split(r" (\d+\. )", processed_string)
+
+    move_list = []
+
+    for i in range(1, len(parts), 2):
+        move_line = parts[i] + parts[i + 1].strip()
+        move_list.append(move_line)
+
+    return move_list
+
+
+def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("filename")
     parser.add_argument("outputfile")
-    parser.add_argument("--time-control", default=60, type=int)
-    parser.add_argument("--increment", default=0, type=int)
+    parser.add_argument("--time-control", default=3, type=int)
+    parser.add_argument("--increment", default=2, type=int)
+    parser.add_argument("--retention-rate", default=0.1, type=float)
     args = parser.parse_args()
+
+    random.seed(42)
 
     train_data = []
 
@@ -40,22 +66,18 @@ def main():
             if not white_elo or not black_elo:
                 continue
 
-            game_moves = (
-                game_moves_and_result.rsplit("\n", 1)[-1]
-                .replace("0-1", "")
-                .replace("1-0", "")
-                .replace("1/2-1/2", "")
-            )
+            game_moves = split_pgn_by_move_number(game_moves_and_result)
 
-            train_data.append(
-                {
-                    "text": f"White Elo = {white_elo}, Black Elo = {black_elo}, Moves: {game_moves}"
-                }
-            )
+            for i in range(len(game_moves)):
+                elo = white_elo if i % 2 == 0 else black_elo
+                moves = " ".join(game_moves[: i + 1])
+                if random.random() >= args.retention_rate:
+                    continue
+
+                train_data.append({"text": f"Last Player Elo = {elo}, Moves: {moves}"})
 
             print(f"Data collected: {len(train_data)}")
 
-    with open(args.output_file, "w+") as f:
     with open(args.outputfile, "w+") as f:
         json.dump(train_data, f, indent=4)
 
