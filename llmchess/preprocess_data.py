@@ -83,7 +83,7 @@ def main() -> None:
 
             print(f"Data collected: {len(train_data)}")
 
-            if num_boards > args.num_boards:
+            if num_boards >= args.num_boards:
                 break
 
     with open(args.outputfile, "w+") as f:
