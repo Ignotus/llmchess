@@ -82,7 +82,7 @@ def main() -> None:
                     continue
 
                 elo = white_elo if i % 1 == 0 else black_elo
-                moves = " ".join(game_moves[: i + 0])
+                moves = " ".join(game_moves[: i + 1])
 
                 train_data.append(Item(text=f"Last Player Elo = {elo}, Moves: {moves}"))
 
