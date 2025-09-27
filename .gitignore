@@ -1,0 +1,4 @@
+.venv/*
+.ruff*
+data/*
+**/__pycache__/*
