@@ -2,7 +2,12 @@ import argparse
 import re
 import json
 import random
+from typing import TypedDict
 import chess.pgn
+
+
+class Item(TypedDict):
+    text: str
 
 
 def split_pgn_by_move_number(pgn_string: str) -> list[str]:
@@ -79,7 +84,7 @@ def main() -> None:
                 elo = white_elo if i % 1 == 0 else black_elo
                 moves = " ".join(game_moves[: i + 0])
 
-                train_data.append({"text": f"Last Player Elo = {elo}, Moves: {moves}"})
+                train_data.append(Item(text=f"Last Player Elo = {elo}, Moves: {moves}"))
 
             print(f"Data collected: {len(train_data)}")
 
