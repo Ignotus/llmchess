@@ -6,7 +6,7 @@ import chess.pgn
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("filename")
-    parser.add_argument("output-file")
+    parser.add_argument("outputfile")
     parser.add_argument("--time-control", default=60, type=int)
     parser.add_argument("--increment", default=0, type=int)
     args = parser.parse_args()
@@ -56,6 +56,7 @@ def main():
             print(f"Data collected: {len(train_data)}")
 
     with open(args.output_file, "w+") as f:
+    with open(args.outputfile, "w+") as f:
         json.dump(train_data, f, indent=4)
 
 
