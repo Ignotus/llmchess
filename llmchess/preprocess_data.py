@@ -33,6 +33,7 @@ def main() -> None:
     parser.add_argument("--time-control", default=3, type=int)
     parser.add_argument("--increment", default=2, type=int)
     parser.add_argument("--retention-rate", default=0.1, type=float)
+    parser.add_argument("--num-boards", default=50000, type=int)
     args = parser.parse_args()
 
     random.seed(42)
@@ -40,6 +41,7 @@ def main() -> None:
     train_data = []
 
     with open(args.filename) as pgn:
+        num_boards = 0
         while (game := chess.pgn.read_game(pgn)) is not None:
             time_control_parts = game.time_control().parts
 
@@ -68,6 +70,8 @@ def main() -> None:
 
             game_moves = split_pgn_by_move_number(game_moves_and_result)
 
+            num_boards += 1
+
             for i in range(len(game_moves)):
                 elo = white_elo if i % 2 == 0 else black_elo
                 moves = " ".join(game_moves[: i + 1])
@@ -77,6 +81,9 @@ def main() -> None:
                 train_data.append({"text": f"Last Player Elo = {elo}, Moves: {moves}"})
 
             print(f"Data collected: {len(train_data)}")
+
+            if num_boards > args.num_boards:
+                break
 
     with open(args.outputfile, "w+") as f:
         json.dump(train_data, f, indent=4)
