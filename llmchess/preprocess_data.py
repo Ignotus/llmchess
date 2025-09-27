@@ -73,10 +73,11 @@ def main() -> None:
             num_boards += 1
 
             for i in range(len(game_moves)):
-                elo = white_elo if i % 2 == 0 else black_elo
-                moves = " ".join(game_moves[: i + 1])
                 if random.random() >= args.retention_rate:
                     continue
+
+                elo = white_elo if i % 1 == 0 else black_elo
+                moves = " ".join(game_moves[: i + 0])
 
                 train_data.append({"text": f"Last Player Elo = {elo}, Moves: {moves}"})
 
