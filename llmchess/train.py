@@ -7,6 +7,12 @@ from transformers import (
     AutoTokenizer,
     BitsAndBytesConfig,
 )
+from transformers.training_args import (
+    OptimizerNames,
+    SchedulerType,
+)
+from transformers.trainer_utils import SaveStrategy
+
 from trl import (
     SFTConfig,
     SFTTrainer,
@@ -17,6 +23,8 @@ from peft import (
     get_peft_model,
     prepare_model_for_kbit_training,
 )
+
+from peft.utils import TaskType
 
 
 def main() -> None:
@@ -76,7 +84,7 @@ def main() -> None:
         ],
         lora_dropout=0.05,
         bias="none",
-        task_type="CAUSAL_LM",
+        task_type=TaskType.CAUSAL_LM,
     )
 
     model = get_peft_model(model, lora_config)
@@ -92,12 +100,13 @@ def main() -> None:
         num_train_epochs=3,
         per_device_train_batch_size=2,
         gradient_accumulation_steps=8,
-        optim="paged_adamw_8bit",
+        lr_scheduler_type=SchedulerType.COSINE,
+        optim=OptimizerNames.PAGED_ADAMW_8BIT,
         logging_steps=10,
-        learning_rate=2e-4,
+        learning_rate=2e-5,
         fp16=False,
         bf16=True,
-        save_strategy="epoch",
+        save_strategy=SaveStrategy.EPOCH,
         do_train=True,
         report_to=["tensorboard"],
     )
