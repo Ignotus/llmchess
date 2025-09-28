@@ -73,7 +73,7 @@ def main() -> None:
     model.print_trainable_parameters()
 
     data_collator = DataCollatorForCompletionOnlyLM(
-        response_template="Next Move: ",
+        response_template=" Next Move: ",
         tokenizer=tokenizer,
     )
 
