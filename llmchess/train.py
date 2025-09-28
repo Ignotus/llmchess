@@ -89,7 +89,7 @@ def main() -> None:
         bf16=True,
         save_strategy="epoch",
         do_train=True,
-        report_to="none",
+        report_to=["tensorboard"],
     )
 
     trainer = SFTTrainer(
