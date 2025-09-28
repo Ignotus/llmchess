@@ -10,3 +10,9 @@ Training data can be downloaded from the [lichess database](https://database.lic
 ```
 uv run python3 -m llmchess.preprocess_data data/lichess_db_standard_rated.pgn data/train_data.json
 ```
+
+### Training
+
+```
+uv run python3 -m llmchess.train
+```
