@@ -56,7 +56,9 @@ def main() -> None:
         quantization_config=bnb_config,
         device_map="auto",
         torch_dtype=torch.bfloat16,
+        attn_implementation="eager",
     )
+    model.config.use_cache = False
 
     model = prepare_model_for_kbit_training(model)
 
