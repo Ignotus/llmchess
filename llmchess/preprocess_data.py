@@ -25,8 +25,8 @@ def split_pgn_by_move_number(pgn_string: str) -> list[str]:
     move_list = []
 
     for i in range(1, len(parts), 2):
-        move_line = parts[i] + parts[i + 1].strip()
-        move_list.append(move_line)
+        move_line = parts[i + 1].strip().split(" ", 1)
+        move_list += move_line
 
     return move_list
 
@@ -86,12 +86,12 @@ def main() -> None:
                 last_move = game_moves[i]
 
                 if i > 1:
-                    text = f"Previous Moves: {previous_moves}, "
+                    text = f"Previous Chess Moves: {previous_moves}, "
                 else:
                     text = ""
 
                 train_data.append(
-                    Item(text=text + f"Last Player Elo: {elo}, Next Move: {last_move}")
+                    Item(text=text + f"Last Chess Player Elo: {elo}, Next Chess Move: {last_move}")
                 )
 
             print(f"Data collected: {len(train_data)}")
