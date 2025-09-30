@@ -93,7 +93,7 @@ def main() -> None:
                 train_data.append(
                     Item(
                         text=text
-                        + f"Last Chess Player Elo: {elo}\nNext Chess Move: {last_move}<EOS>"
+                        + f"Next Chess Player Elo: {elo}\nNext Chess Move: {last_move}<EOS>"
                     )
                 )
 
