@@ -91,13 +91,13 @@ def main() -> None:
     model.print_trainable_parameters()
 
     data_collator = DataCollatorForCompletionOnlyLM(
-        response_template=" Next Move: ",
+        response_template=" Next Chess Move: ",
         tokenizer=tokenizer,
     )
 
     training_args = SFTConfig(
         output_dir=args.output_dir,
-        num_train_epochs=3,
+        num_train_epochs=1,
         per_device_train_batch_size=2,
         gradient_accumulation_steps=8,
         lr_scheduler_type=SchedulerType.COSINE,
