@@ -86,14 +86,14 @@ def main() -> None:
                 last_move = game_moves[i]
 
                 if i > 1:
-                    text = f"Previous Chess Moves: {previous_moves}, "
+                    text = f"Previous Chess Moves: {previous_moves}\n"
                 else:
                     text = ""
 
                 train_data.append(
                     Item(
                         text=text
-                        + f"Last Chess Player Elo: {elo}, Next Chess Move: {last_move}<EOS>"
+                        + f"Last Chess Player Elo: {elo}\nNext Chess Move: {last_move}<EOS>"
                     )
                 )
 
