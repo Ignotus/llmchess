@@ -97,7 +97,7 @@ def main() -> None:
                     )
                 )
 
-            print(f"Data collected: {len(train_data)}")
+            print(f"Data collected: {len(train_data)} from {num_boards} boards.")
 
             if num_boards >= args.num_boards:
                 break

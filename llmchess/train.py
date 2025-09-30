@@ -91,7 +91,7 @@ def main() -> None:
     model.print_trainable_parameters()
 
     data_collator = DataCollatorForCompletionOnlyLM(
-        response_template="Next Chess Move: ",
+        response_template="Next Chess Move:",
         tokenizer=tokenizer,
     )
 
