@@ -91,7 +91,10 @@ def main() -> None:
                     text = ""
 
                 train_data.append(
-                    Item(text=text + f"Last Chess Player Elo: {elo}, Next Chess Move: {last_move}<EOS>")
+                    Item(
+                        text=text
+                        + f"Last Chess Player Elo: {elo}, Next Chess Move: {last_move}<EOS>"
+                    )
                 )
 
             print(f"Data collected: {len(train_data)}")
