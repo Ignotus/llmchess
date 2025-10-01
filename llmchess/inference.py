@@ -22,19 +22,21 @@ def main() -> None:
     model.eval()
 
     elo = 1500
-    text = f"Last Player Elo: {elo}, Next Move: "
+    text = f"Previous Chess Moves: e4 e5 Bc4 Nc6 Nf3 Nf6 c3\nNext Chess Player Elo: {elo}\nNext Chess Move: "
+    print(text)
     input_ids = tokenizer(text, return_tensors="pt").input_ids.to(device)
 
     with torch.no_grad():
         output_ids = model.generate(
             input_ids,
-            max_length=10,
+            max_length=512,
             num_beams=5,
-            do_sample=False,
-            pad_token_id=tokenizer.eos_token_id,
+            do_sample=True,
         )
 
-    generated_text = tokenizer.decode(output_ids[0], skip_special_tokens=True)
+    generated_text = tokenizer.decode(
+        output_ids[0, len(input_ids[0]) :], skip_special_tokens=True
+    )
 
     print(generated_text)
 
