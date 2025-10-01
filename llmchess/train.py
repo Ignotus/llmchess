@@ -42,7 +42,7 @@ def main() -> None:
 
     dataset = Dataset.from_list(data)
 
-    tokenizer = AutoTokenizer.from_pretrained(args.model_id)
+    tokenizer = AutoTokenizer.from_pretrained(args.model_id, padding_side="right")
     if tokenizer.pad_token is None:
         tokenizer.pad_token = tokenizer.eos_token
 
