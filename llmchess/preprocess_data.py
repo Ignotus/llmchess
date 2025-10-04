@@ -82,10 +82,10 @@ def main() -> None:
                     continue
 
                 elo = white_elo if i % 1 == 0 else black_elo
-                previous_moves = " ".join(game_moves[:i])
                 last_move = game_moves[i]
 
                 if i > 1:
+                    previous_moves = " ".join(game_moves[:i])
                     text = f"Previous Chess Moves: {previous_moves}\n"
                 else:
                     text = ""
