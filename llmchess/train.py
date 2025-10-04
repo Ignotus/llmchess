@@ -55,6 +55,7 @@ def main() -> None:
 
     bnb_config = BitsAndBytesConfig(
         load_in_4bit=True,
+        bnb_4bit_use_double_quant=True,
         bnb_4bit_quant_type="nf4",
         bnb_4bit_compute_dtype=torch.bfloat16,
     )
@@ -63,7 +64,7 @@ def main() -> None:
         args.model_id,
         quantization_config=bnb_config,
         device_map="auto",
-        torch_dtype=torch.bfloat16,
+        dtype=torch.bfloat16,
         attn_implementation="eager",
     )
     model.config.use_cache = False
@@ -101,13 +102,18 @@ def main() -> None:
         per_device_train_batch_size=2,
         gradient_accumulation_steps=8,
         lr_scheduler_type=SchedulerType.COSINE,
-        optim=OptimizerNames.PAGED_ADAMW_8BIT,
+        optim=OptimizerNames.ADAMW_TORCH_FUSED,
         logging_steps=10,
         learning_rate=2e-5,
         fp16=False,
         bf16=True,
         save_strategy=SaveStrategy.EPOCH,
         do_train=True,
+        max_grad_norm=1.0,
+        gradient_checkpointing_kwargs={
+            "use_reentrant": False
+        },
+        warmup_ratio=0.03,
         report_to=["tensorboard"],
     )
 
