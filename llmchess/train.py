@@ -20,6 +20,7 @@ from trl import (
 )
 from peft import (
     LoraConfig,
+    PeftModel,
     get_peft_model,
     prepare_model_for_kbit_training,
 )
@@ -89,7 +90,9 @@ def main() -> None:
     )
 
     model = get_peft_model(model, lora_config)
+    assert isinstance(model, PeftModel)
     model.print_trainable_parameters()
+    model.gradient_checkpointing_enable()
 
     data_collator = DataCollatorForCompletionOnlyLM(
         response_template="Next Chess Move:",
