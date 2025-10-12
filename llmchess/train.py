@@ -31,7 +31,7 @@ from peft.utils import TaskType
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        "--model-id", default="google/gemma-3-1b-pt", choices=["google/gemma-3-1b-pt"]
+        "--model-id", default="google/gemma-3-1b-pt", choices=["google/gemma-3-1b-pt", "Qwen/Qwen3-0.6B"]
     )
     parser.add_argument("--data-file", default="data/train_data.json")
     parser.add_argument("--output-dir", default="output/")
@@ -107,7 +107,7 @@ def main() -> None:
         lr_scheduler_type=SchedulerType.COSINE,
         optim=OptimizerNames.ADAMW_TORCH_FUSED,
         logging_steps=10,
-        learning_rate=2e-5,
+        learning_rate=2e-4,
         fp16=False,
         bf16=True,
         save_strategy=SaveStrategy.EPOCH,
