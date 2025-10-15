@@ -3,6 +3,9 @@
 LLM-based chess bot. Just for fun, because why not.
 
 
+![img](boards/game1.gif)
+
+
 ### Data
 
 Training data can be downloaded from the [lichess database](https://database.lichess.org/) and put into the `data/` folder.
