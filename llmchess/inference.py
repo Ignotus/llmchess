@@ -9,6 +9,7 @@ from peft import (
     AutoPeftModelForCausalLM,
 )
 import torch
+import numpy as np
 import chess
 import chess.svg
 import io
@@ -16,7 +17,6 @@ from cairosvg import svg2png
 from PIL import (
     Image,
     ImageDraw,
-    ImageFont,
 )
 from lmformatenforcer import RegexParser
 from lmformatenforcer.integrations.transformers import (
@@ -134,10 +134,9 @@ def main() -> None:
             for j in range(2):
                 try:
                     if j == 1:
-                        move_regex = list_to_regex(
-                            [board.san(move) for move in board.legal_moves]
-                        )
-                        print(move_regex)
+                        san_moves = [board.san(move) for move in board.legal_moves]
+                        np.random.shuffle(san_moves)
+                        move_regex = list_to_regex(san_moves)
                         parser = RegexParser(move_regex)
                         output_ids = generate_enforced(
                             model, tokenizer_data, parser, **generate_kwargs
