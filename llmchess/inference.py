@@ -1,4 +1,5 @@
 import argparse
+import time
 
 from transformers import (
     AutoTokenizer,
@@ -18,15 +19,20 @@ def main() -> None:
     args = parser.parse_args()
 
     model = AutoPeftModelForCausalLM.from_pretrained(
-        args.model_path, torch_dtype=torch.bfloat16
+        args.model_path,
+        dtype=torch.bfloat16,
+        attn_implementation="flash_attention_2",
     )
     tokenizer = AutoTokenizer.from_pretrained(args.model_path, padding_side="left")
 
     model = model.merge_and_unload()
 
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    assert torch.cuda.is_available()
+
+    device = torch.device("cuda")
     model.to(device)
     model.eval()
+    print(model)
 
     elo1 = args.elo1
     elo2 = args.elo2
@@ -40,18 +46,19 @@ def main() -> None:
 
             elo = elo1 if i % 2 == 0 else elo2
             prompt = f"{moves_prompt}Next Chess Player Elo: {elo}\nNext Chess Move: "
-            input_ids = tokenizer(prompt, return_tensors="pt").input_ids.to(device)
+            t1 = time.time()
+            inputs = tokenizer(prompt, return_tensors="pt").to(device)
 
             output_ids = model.generate(
-                input_ids,
-                max_length=512,
-                num_beams=5,
-                do_sample=True,
+                **inputs, num_beams=5, do_sample=True, max_new_tokens=64, use_cache=True
             )
 
             next_move = tokenizer.decode(
-                output_ids[0, len(input_ids[0]) :], skip_special_tokens=True
+                output_ids[0, len(inputs.input_ids[0]) :], skip_special_tokens=True
             ).split("<EOS>", 1)[0]
+
+            t2 = time.time()
+            print(f"Generation {t2 - t1:.2f} sec")
 
             moves.append(next_move)
             print(moves)
