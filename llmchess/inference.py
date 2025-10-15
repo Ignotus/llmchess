@@ -29,6 +29,11 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--elo1", default=1500)
     parser.add_argument("--elo2", default=1400)
+    parser.add_argument(
+        "--opening",
+        default="london",
+        choices=["london", "caro-cann", "sicilian-defence", "queens-gambit"],
+    )
     parser.add_argument("--model-path", default="./output")
 
     args = parser.parse_args()
@@ -51,7 +56,19 @@ def main() -> None:
 
     elo1 = args.elo1
     elo2 = args.elo2
-    moves = ["e4"]
+    moves = []
+    match args.opening:
+        case "london":
+            moves += ["e4", "e5"]
+        case "caro-cann":
+            moves += ["e4", "c6"]
+        case "sicilian-defence":
+            moves += ["e4", "c5"]
+        case "queens-gambit":
+            moves += ["d4", "d5", "c4"]
+        case _:
+            raise NotImplementedError()
+
     frames = []
 
     board = chess.Board()
@@ -92,7 +109,7 @@ def main() -> None:
     tokenizer_data = build_token_enforcer_tokenizer_data(tokenizer)
 
     with torch.no_grad():
-        for i in range(1, 100):
+        for i in range(len(moves), 100):
             if board.legal_moves.count() == 0:
                 break
 
