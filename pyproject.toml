@@ -6,8 +6,10 @@ readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
     "bitsandbytes>=0.47.0",
+    "cairosvg>=2.8.2",
     "datasets>=4.1.1",
     "flash-attn>=2.8.3",
+    "lm-format-enforcer>=0.11.3",
     "peft>=0.17.1",
     "python-chess>=1.999",
     "tensorboard>=2.20.0",
