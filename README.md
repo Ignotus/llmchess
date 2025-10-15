@@ -3,7 +3,7 @@
 LLM-based chess bot. Just for fun, because why not.
 
 
-![img](boards/game1.gif)
+![img](boards/game1.gif) ![img](boards/queens-gambit.gif)
 
 
 ### Data
