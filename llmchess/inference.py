@@ -104,7 +104,8 @@ def main() -> None:
         escaped_strings = [re.escape(s) for s in str_list]
         return "(" + "|".join(escaped_strings) + ")"
 
-    add_move(moves[-1])
+    for move in moves:
+        add_move(move)
 
     tokenizer_data = build_token_enforcer_tokenizer_data(tokenizer)
 
