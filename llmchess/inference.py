@@ -92,7 +92,10 @@ def main() -> None:
     tokenizer_data = build_token_enforcer_tokenizer_data(tokenizer)
 
     with torch.no_grad():
-        for i in range(1, 50):
+        for i in range(1, 100):
+            if board.legal_moves.count() == 0:
+                break
+
             print(f"Move {i}")
             moves_prompt = ""
             if moves:
