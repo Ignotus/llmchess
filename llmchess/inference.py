@@ -109,7 +109,7 @@ def main() -> None:
     tokenizer_data = build_token_enforcer_tokenizer_data(tokenizer)
 
     with torch.no_grad():
-        for i in range(len(moves), 100):
+        for i in range(len(moves), 50):
             if board.legal_moves.count() == 0:
                 break
 
@@ -161,7 +161,7 @@ def main() -> None:
 
                     add_move(next_move)
                     break
-                except chess.IllegalMoveError as e:
+                except (chess.IllegalMoveError, chess.InvalidMoveError) as e:
                     print(e)
                     continue
 
