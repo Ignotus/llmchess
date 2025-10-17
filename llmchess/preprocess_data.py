@@ -3,6 +3,7 @@ import re
 import json
 import random
 from typing import TypedDict
+import chess
 import chess.pgn
 
 
@@ -77,16 +78,15 @@ def main() -> None:
 
             num_boards += 1
 
-            for i in range(len(game_moves)):
+            board = chess.Board()
+            for i, last_move in enumerate(game_moves):
                 if random.random() >= args.retention_rate:
+                    board.push_san(last_move)
                     continue
 
                 elo = white_elo if i % 1 == 0 else black_elo
-                last_move = game_moves[i]
-
                 if i > 1:
-                    previous_moves = " ".join(game_moves[:i])
-                    text = f"Previous Chess Moves: {previous_moves}\n"
+                    text = f"Previous Chess Position:\n{str(board)}\n"
                 else:
                     text = ""
 
@@ -96,6 +96,8 @@ def main() -> None:
                         + f"Next Chess Player Elo: {elo}\nNext Chess Move: {last_move}<EOS>"
                     )
                 )
+
+                board.push_san(last_move)
 
             print(f"Data collected: {len(train_data)} from {num_boards} boards.")
 
