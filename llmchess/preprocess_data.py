@@ -87,6 +87,11 @@ def main() -> None:
                     board.push_san(last_move)
                     continue
 
+                if i % 2 == 0:
+                    player = "white"
+                else:
+                    player = "black"
+
                 elo = white_elo if i % 2 == 0 else black_elo
                 if i > 1:
                     text = f"Previous Chess Position:\n{str(board)}\n"
@@ -96,7 +101,7 @@ def main() -> None:
                 train_data.append(
                     Item(
                         text=text
-                        + f"Next Chess Player Elo: {elo}\nNext Chess Move: {last_move}<EOS>"
+                        + f"Next Chess Player ({player}) Elo: {elo}\nNext Chess Move: {last_move}<EOS>"
                     )
                 )
 
