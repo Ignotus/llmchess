@@ -68,11 +68,14 @@ def main() -> None:
                 continue
 
             headers = game.headers
-            white_elo = round(int(headers.get("WhiteElo", None)), -1)
-            black_elo = round(int(headers.get("BlackElo", None)), -1)
+            white_elo = headers.get("WhiteElo", None)
+            black_elo = headers.get("BlackElo", None)
 
             if not white_elo or not black_elo:
                 continue
+
+            white_elo = round(int(white_elo), -1)
+            black_elo = round(int(black_elo), -1)
 
             game_moves = split_pgn_by_move_number(game_moves_and_result)
 
