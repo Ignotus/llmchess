@@ -115,6 +115,8 @@ def main() -> None:
         save_strategy=SaveStrategy.EPOCH,
         do_train=True,
         max_grad_norm=1.0,
+        seed=42,
+        data_seed=42,
         gradient_checkpointing_kwargs={"use_reentrant": False},
         warmup_ratio=0.03,
         report_to=["tensorboard"],
