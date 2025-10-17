@@ -89,10 +89,11 @@ def main() -> None:
 
                 if i % 2 == 0:
                     player = "white"
+                    elo = white_elo
                 else:
                     player = "black"
+                    elo = black_elo
 
-                elo = white_elo if i % 2 == 0 else black_elo
                 if i > 1:
                     text = f"Previous Chess Position:\n{str(board)}\n"
                 else:
