@@ -87,7 +87,7 @@ def main() -> None:
                     board.push_san(last_move)
                     continue
 
-                elo = white_elo if i % 1 == 0 else black_elo
+                elo = white_elo if i % 2 == 0 else black_elo
                 if i > 1:
                     text = f"Previous Chess Position:\n{str(board)}\n"
                 else:
