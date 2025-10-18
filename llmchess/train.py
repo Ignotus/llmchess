@@ -50,7 +50,11 @@ def main() -> None:
         tokenizer.pad_token = tokenizer.eos_token
 
     def preprocess_function(examples):
-        return tokenizer(examples["text"], truncation=True, max_length=args.max_seq_len)
+        return tokenizer(
+            examples["text"] + tokenizer.eos_token,
+            truncation=True,
+            max_length=args.max_seq_len,
+        )
 
     tokenized_dataset = dataset.map(
         preprocess_function, batched=True, num_proc=1, remove_columns=["text"]

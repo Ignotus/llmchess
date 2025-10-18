@@ -88,21 +88,17 @@ def main() -> None:
                     continue
 
                 if i % 2 == 0:
-                    player = "white"
+                    player = "White"
                     elo = white_elo
                 else:
-                    player = "black"
+                    player = "Black"
                     elo = black_elo
-
-                if i > 1:
-                    text = f"Previous Chess Position:\n{str(board)}\n"
-                else:
-                    text = ""
 
                 train_data.append(
                     Item(
-                        text=text
-                        + f"Next Chess Player ({player}) Elo: {elo}\nNext Chess Move: {last_move}<EOS>"
+                        text=f"Previous Chess Position:\n{str(board)}\n"
+                        f"Next Chess Player ({player}) Elo: {elo}\n"
+                        f"Next Chess Move: {last_move}"
                     )
                 )
 
