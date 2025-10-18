@@ -51,9 +51,10 @@ def main() -> None:
 
     def preprocess_function(examples):
         return tokenizer(
-            examples["text"] + tokenizer.eos_token,
+            examples["text"],
             truncation=True,
             max_length=args.max_seq_len,
+            add_special_tokens=True,
         )
 
     tokenized_dataset = dataset.map(
