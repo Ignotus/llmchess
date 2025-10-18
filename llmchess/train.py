@@ -50,7 +50,12 @@ def main() -> None:
         tokenizer.pad_token = tokenizer.eos_token
 
     def preprocess_function(examples):
-        return tokenizer(examples["text"], truncation=True, max_length=args.max_seq_len)
+        return tokenizer(
+            examples["text"],
+            truncation=True,
+            max_length=args.max_seq_len,
+            add_special_tokens=True,
+        )
 
     tokenized_dataset = dataset.map(
         preprocess_function, batched=True, num_proc=1, remove_columns=["text"]
@@ -97,15 +102,15 @@ def main() -> None:
     model.gradient_checkpointing_enable()
 
     data_collator = DataCollatorForCompletionOnlyLM(
-        response_template="Next Chess Move:",
+        response_template="Next Chess Move: ",
         tokenizer=tokenizer,
     )
 
     training_args = SFTConfig(
         output_dir=args.output_dir,
         num_train_epochs=3,
-        per_device_train_batch_size=2,
-        gradient_accumulation_steps=8,
+        per_device_train_batch_size=8,
+        gradient_accumulation_steps=4,
         lr_scheduler_type=SchedulerType.COSINE,
         optim=OptimizerNames.ADAMW_TORCH_FUSED,
         logging_steps=10,
@@ -115,6 +120,8 @@ def main() -> None:
         save_strategy=SaveStrategy.EPOCH,
         do_train=True,
         max_grad_norm=1.0,
+        seed=42,
+        data_seed=42,
         gradient_checkpointing_kwargs={"use_reentrant": False},
         warmup_ratio=0.03,
         report_to=["tensorboard"],
