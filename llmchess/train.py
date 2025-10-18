@@ -101,7 +101,7 @@ def main() -> None:
     model.gradient_checkpointing_enable()
 
     data_collator = DataCollatorForCompletionOnlyLM(
-        response_template="Next Chess Move:",
+        response_template="Next Chess Move: ",
         tokenizer=tokenizer,
     )
 
