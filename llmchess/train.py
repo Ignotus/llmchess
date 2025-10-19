@@ -43,11 +43,13 @@ def main() -> None:
     with open(args.data_file, "r") as f:
         data = json.load(f)
 
-    dataset = Dataset.from_list(data)
-
     tokenizer = AutoTokenizer.from_pretrained(args.model_id, padding_side="right")
     if tokenizer.pad_token is None:
         tokenizer.pad_token = tokenizer.eos_token
+
+    # tokenizer(add_special_tokens=True) doesn't add eos_token, have to add it manually
+    data = [dict(text=v["text"] + tokenizer.eos_token) for v in data]
+    dataset = Dataset.from_list(data)
 
     def preprocess_function(examples):
         return tokenizer(examples["text"], truncation=True, max_length=args.max_seq_len)
