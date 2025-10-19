@@ -115,12 +115,16 @@ def main() -> None:
                 break
 
             print(f"Move {i}")
-            moves_prompt = ""
-            if moves:
-                moves_prompt = f"Previous Chess Moves: {' '.join(moves)}\n"
+            moves_prompt = f"Previous Chess Position:\n{str(board)}\n"
 
-            elo = elo1 if i % 2 == 0 else elo2
-            prompt = f"{moves_prompt}Next Chess Player Elo: {elo}\nNext Chess Move: "
+            if i % 2 == 0:
+                player = "White"
+                elo = elo1
+            else:
+                player = "Black"
+                elo = elo2
+
+            prompt = f"{moves_prompt}Next Chess Player ({player}) Elo: {elo}\nNext Chess Move: "
             t1 = time.time()
             inputs = tokenizer(prompt, return_tensors="pt").to(device)
 
@@ -148,11 +152,11 @@ def main() -> None:
                     next_move = (
                         tokenizer.decode(
                             output_ids[0, len(inputs.input_ids[0]) :],
-                            skip_special_tokens=True,
                         )
-                        .split("<EOS>", 1)[0]
-                        .strip()
                     )
+                    print("Answer", next_move)
+
+                    next_move = next_move.split(tokenizer.eos_token, 1)[0].strip()
 
                     if j == 1:
                         print(f"Trial {j}: {next_move}")
