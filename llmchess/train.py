@@ -43,22 +43,23 @@ def main() -> None:
     with open(args.data_file, "r") as f:
         data = json.load(f)
 
-    dataset = Dataset.from_list(data)
-
     tokenizer = AutoTokenizer.from_pretrained(args.model_id, padding_side="right")
     if tokenizer.pad_token is None:
         tokenizer.pad_token = tokenizer.eos_token
+
+    # tokenizer(add_special_tokens=True) doesn't add eos_token, have to add it manually
+    data = [dict(text=v["text"] + tokenizer.eos_token) for v in data]
+    dataset = Dataset.from_list(data)
 
     def preprocess_function(examples):
         return tokenizer(
             examples["text"],
             truncation=True,
             max_length=args.max_seq_len,
-            add_special_tokens=True,
         )
 
     tokenized_dataset = dataset.map(
-        preprocess_function, batched=True, num_proc=1, remove_columns=["text"]
+        preprocess_function, batched=True, num_proc=4, remove_columns=["text"]
     )
 
     bnb_config = BitsAndBytesConfig(
@@ -99,18 +100,16 @@ def main() -> None:
     model = get_peft_model(model, lora_config)
     assert isinstance(model, PeftModel)
     model.print_trainable_parameters()
-    model.gradient_checkpointing_enable()
 
     data_collator = DataCollatorForCompletionOnlyLM(
-        response_template="Next Chess Move: ",
+        response_template="Next Chess Move:",
         tokenizer=tokenizer,
     )
 
     training_args = SFTConfig(
         output_dir=args.output_dir,
         num_train_epochs=3,
-        per_device_train_batch_size=8,
-        gradient_accumulation_steps=4,
+        per_device_train_batch_size=32,
         lr_scheduler_type=SchedulerType.COSINE,
         optim=OptimizerNames.ADAMW_TORCH_FUSED,
         logging_steps=10,
@@ -122,7 +121,6 @@ def main() -> None:
         max_grad_norm=1.0,
         seed=42,
         data_seed=42,
-        gradient_checkpointing_kwargs={"use_reentrant": False},
         warmup_ratio=0.03,
         report_to=["tensorboard"],
     )
