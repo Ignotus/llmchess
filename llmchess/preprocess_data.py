@@ -81,7 +81,7 @@ def main() -> None:
                 if random.random() >= args.retention_rate:
                     continue
 
-                elo = white_elo if i % 1 == 0 else black_elo
+                elo = white_elo if i % 2 == 0 else black_elo
                 last_move = game_moves[i]
 
                 if i > 1:
