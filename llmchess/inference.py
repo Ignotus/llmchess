@@ -152,11 +152,9 @@ def main() -> None:
                     next_move = (
                         tokenizer.decode(
                             output_ids[0, len(inputs.input_ids[0]) :],
+                            skip_special_tokens=True,
                         )
                     )
-                    print("Answer", next_move)
-
-                    next_move = next_move.split(tokenizer.eos_token, 1)[0].strip()
 
                     if j == 1:
                         print(f"Trial {j}: {next_move}")
